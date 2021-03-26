@@ -26,49 +26,53 @@ const favoriteBlog = (blogs) => {
   return blogs[indexOfMostLikes]
 }
 
-const mostBlogs = (blogs) => {
+const authorInfo = (blogs) => {
   let authors = []
   let numberOfBlogsPerAuthor = []
+  let numberOfLikesPerAuthor = []
 
   blogs.forEach(blog => {
     if(authors.includes(blog.author)) {
       const indexOfAuthor = authors.indexOf(blog.author)
       numberOfBlogsPerAuthor[indexOfAuthor] += 1
+      numberOfLikesPerAuthor[indexOfAuthor] += blog.likes
     } else {
       authors.push(blog.author)
       numberOfBlogsPerAuthor.push(1)
+      numberOfLikesPerAuthor.push(blog.likes)
     }
   })
 
-  const indexOfAuthorWithMostBlogs = numberOfBlogsPerAuthor.indexOf(Math.max(...numberOfBlogsPerAuthor))
+  const authorsInformation = {
+    authorNames: authors,
+    authorsNumberOfBlogs: numberOfBlogsPerAuthor,
+    authorsNumberOfLikes: numberOfLikesPerAuthor
+  }
+
+  return authorsInformation
+}
+
+const mostBlogs = (blogs) => {
+  const authorsInformation = authorInfo(blogs)
+
+  const indexOfAuthorWithMostBlogs = authorsInformation.authorsNumberOfBlogs.indexOf(Math.max(...authorsInformation.authorsNumberOfBlogs))
   
   const mostBlogsAuthor = {
-    author: authors[indexOfAuthorWithMostBlogs],
-    blogs: numberOfBlogsPerAuthor[indexOfAuthorWithMostBlogs] 
+    author: authorsInformation.authorNames[indexOfAuthorWithMostBlogs],
+    blogs: authorsInformation.authorsNumberOfBlogs[indexOfAuthorWithMostBlogs] 
   }
 
   return mostBlogsAuthor
 }
 
 const mostLikes = (blogs) => {
-  let authors = []
-  let numberOfLikesPerAuthor = []
+  const authorsInformtaion = authorInfo(blogs)
 
-  blogs.forEach(blog => {
-    if(authors.includes(blog.author)) {
-      const indexOfAuthor = authors.indexOf(blog.author)
-      numberOfLikesPerAuthor[indexOfAuthor] += blog.likes
-    } else {
-      authors.push(blog.author)
-      numberOfLikesPerAuthor.push(blog.likes)
-    }
-  })
-
-  const indexOfAuthorWithMostLikes = numberOfLikesPerAuthor.indexOf(Math.max(...numberOfLikesPerAuthor))
+  const indexOfAuthorWithMostLikes = authorsInformtaion.authorsNumberOfLikes.indexOf(Math.max(...authorsInformtaion.authorsNumberOfLikes))
 
   const mostLikesAuthor = {
-    author: authors[indexOfAuthorWithMostLikes],
-    likes: numberOfLikesPerAuthor[indexOfAuthorWithMostLikes]
+    author: authorsInformtaion.authorNames[indexOfAuthorWithMostLikes],
+    likes: authorsInformtaion.authorsNumberOfLikes[indexOfAuthorWithMostLikes]
   }
 
   return mostLikesAuthor
