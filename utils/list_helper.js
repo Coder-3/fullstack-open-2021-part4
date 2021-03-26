@@ -26,8 +26,33 @@ const favoriteBlog = (blogs) => {
   return blogs[indexOfMostLikes]
 }
 
+const mostBlogs = (blogs) => {
+  let authors = []
+  let numberOfBlogsPerAuthor = []
+
+  blogs.forEach(blog => {
+    if(authors.includes(blog.author)) {
+      const indexOfAuthor = authors.indexOf(blog.author)
+      numberOfBlogsPerAuthor[indexOfAuthor] += 1
+    } else {
+      authors.push(blog.author)
+      numberOfBlogsPerAuthor.push(1)
+    }
+  })
+
+  const indexOfAuthorWithMostBlogs = numberOfBlogsPerAuthor.indexOf(Math.max(...numberOfBlogsPerAuthor))
+  
+  const mostBlogsAuthor = {
+    author: authors[indexOfAuthorWithMostBlogs],
+    blogs: numberOfBlogsPerAuthor[indexOfAuthorWithMostBlogs] 
+  }
+
+  return mostBlogsAuthor
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
