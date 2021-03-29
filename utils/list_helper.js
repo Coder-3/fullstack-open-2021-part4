@@ -1,4 +1,4 @@
-const dummy = (blog) => {
+const dummy = () => {
   return 1
 }
 
