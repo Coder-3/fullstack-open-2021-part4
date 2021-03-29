@@ -55,6 +55,22 @@ test('check if likes property is missing', async () => {
   expect(likes).toBeDefined()
 })
 
+test('correct error if title and url are missing', async () => {
+  const blogMissingTitleAndUrl = {
+    _id: '5a422ba71b54a676234d17fb',
+    author: 'Robert C. Martin',
+    likes: 0,
+    __v: 0
+  }
+
+  let blogObject = new Blog(blogMissingTitleAndUrl)
+  await blogObject.save().expect(400)
+
+  const resultingBlogs = await helper.blogsInDb()
+
+  expect(resultingBlogs).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
