@@ -47,6 +47,14 @@ test('can create blog post', async () => {
   expect(contents).toContain('First class tests')
 })
 
+test('check if likes property is missing', async () => {
+  let response = await helper.blogsInDb()
+
+  const likes = response.map(blog => blog.likes)
+
+  expect(likes).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
