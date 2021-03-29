@@ -19,6 +19,15 @@ const initialBlogs = [
   },
 ]
 
+const newBlog =   {
+  _id: '5a422b891b54a676234d17fa',
+  title: 'First class tests',
+  author: 'Robert C. Martin',
+  url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+  likes: 10,
+  __v: 0
+}
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
@@ -26,5 +35,6 @@ const blogsInDb = async () => {
 
 module.exports = {
   initialBlogs,
-  blogsInDb
+  blogsInDb,
+  newBlog
 }

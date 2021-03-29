@@ -35,6 +35,18 @@ test('check if unique identifier is named id', async () => {
   expect(identifiers).toBeDefined()
 })
 
+test('can create blog post', async () => {
+  let blogObject = new Blog(helper.newBlog)
+  await blogObject.save()
+
+  const response = await helper.blogsInDb()
+
+  const contents = response.map(blog => blog.title)
+
+  expect(response).toHaveLength(helper.initialBlogs.length + 1)
+  expect(contents).toContain('First class tests')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
