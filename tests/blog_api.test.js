@@ -27,6 +27,14 @@ test('one of the blog titles is React patterns', async () => {
   expect(titles).toContain('React patterns')
 })
 
+test('check if unique identifier is named id', async () => {
+  const response = await helper.blogsInDb()
+
+  const identifiers = response.map(blog => blog.id)
+
+  expect(identifiers).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
