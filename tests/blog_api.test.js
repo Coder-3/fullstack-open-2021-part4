@@ -71,6 +71,23 @@ test('correct error if title and url are missing', async () => {
   expect(resultingBlogs).toHaveLength(helper.initialBlogs.length)
 })
 
+test('deleting a specific blog post', async () => {
+  const blogs = await helper.blogsInDb()
+  const blogToDelete = blogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const newBlogs = await helper.blogsInDb()
+
+  expect(newBlogs).toHaveLength(blogs.length - 1)
+
+  const contents = newBlogs.map(blog => blog.content)
+
+  expect(contents).not.toContain(blogToDelete.content)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
