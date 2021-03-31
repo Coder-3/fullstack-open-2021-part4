@@ -21,18 +21,17 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   let blog = new Blog(request.body)
 
   if(!blog.likes) {
     blog.likes = 0
   }
 
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
+  const savedBlog = await blog.save()
+  await blog.save()
+
+  response.status(201).json(savedBlog.toJSON())
 })
 
 blogsRouter.put('/:id', async (request, response) => {

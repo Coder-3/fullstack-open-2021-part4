@@ -65,39 +65,22 @@ test('check if likes property is missing', async () => {
   expect(newestBlog.body.likes).toBe(0)
 })
 
-// test('correct error if title and url are missing', async () => {
-//   const blogMissingTitleAndUrl = {
-//     author: 'Robert C. Martin',
-//     likes: 0,
-//     __v: 0
-//   }
+test('deleting a specific blog post', async () => {
+  const blogs = await helper.blogsInDb()
+  const blogToDelete = blogs[0]
 
-//   await api
-//     .post('/api/blogs')
-//     .send(blogMissingTitleAndUrl)
-//     .expect(400)
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
 
-//   const resultingBlogs = await helper.blogsInDb()
+  const newBlogs = await helper.blogsInDb()
 
-//   expect(resultingBlogs).toHaveLength(helper.initialBlogs.length)
-// })
+  expect(newBlogs).toHaveLength(blogs.length - 1)
 
-// test('deleting a specific blog post', async () => {
-//   const blogs = await helper.blogsInDb()
-//   const blogToDelete = blogs[0]
+  const contents = newBlogs.map(blog => blog.title)
 
-//   await api
-//     .delete(`/api/blogs/${blogToDelete.id}`)
-//     .expect(204)
-
-//   const newBlogs = await helper.blogsInDb()
-
-//   expect(newBlogs).toHaveLength(blogs.length - 1)
-
-//   const contents = newBlogs.map(blog => blog.title)
-
-//   expect(contents).not.toContain(blogToDelete.title)
-// })
+  expect(contents).not.toContain(blogToDelete.title)
+})
 
 // test('modifying a specific blog post', async () => {
 //   const blogs = await helper.blogsInDb()
