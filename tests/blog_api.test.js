@@ -48,45 +48,77 @@ test('can create blog post', async () => {
 })
 
 test('check if likes property is missing', async () => {
-  let response = await helper.blogsInDb()
-
-  const likes = response.map(blog => blog.likes)
-
-  expect(likes).toBeDefined()
-})
-
-test('correct error if title and url are missing', async () => {
-  const blogMissingTitleAndUrl = {
-    _id: '5a422ba71b54a676234d17fb',
-    author: 'Robert C. Martin',
-    likes: 0,
-    __v: 0
+  const blogMissingLikes = {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'Foo Bar',
+    author: 'John Doe',
+    url: 'https://example.com'
   }
 
-  let blogObject = new Blog(blogMissingTitleAndUrl)
-  await blogObject.save().expect(400)
-
-  const resultingBlogs = await helper.blogsInDb()
-
-  expect(resultingBlogs).toHaveLength(helper.initialBlogs.length)
-})
-
-test('deleting a specific blog post', async () => {
-  const blogs = await helper.blogsInDb()
-  const blogToDelete = blogs[0]
-
   await api
-    .delete(`/api/blogs/${blogToDelete.id}`)
-    .expect(204)
+    .post('/api/blogs')
+    .send(blogMissingLikes)
+    .expect(201)
+  
+  const newestBlog = await api.get(`/api/blogs/${blogMissingLikes._id}`)
 
-  const newBlogs = await helper.blogsInDb()
-
-  expect(newBlogs).toHaveLength(blogs.length - 1)
-
-  const contents = newBlogs.map(blog => blog.content)
-
-  expect(contents).not.toContain(blogToDelete.content)
+  expect(newestBlog.body.likes).toBe(0)
 })
+
+// test('correct error if title and url are missing', async () => {
+//   const blogMissingTitleAndUrl = {
+//     author: 'Robert C. Martin',
+//     likes: 0,
+//     __v: 0
+//   }
+
+//   await api
+//     .post('/api/blogs')
+//     .send(blogMissingTitleAndUrl)
+//     .expect(400)
+
+//   const resultingBlogs = await helper.blogsInDb()
+
+//   expect(resultingBlogs).toHaveLength(helper.initialBlogs.length)
+// })
+
+// test('deleting a specific blog post', async () => {
+//   const blogs = await helper.blogsInDb()
+//   const blogToDelete = blogs[0]
+
+//   await api
+//     .delete(`/api/blogs/${blogToDelete.id}`)
+//     .expect(204)
+
+//   const newBlogs = await helper.blogsInDb()
+
+//   expect(newBlogs).toHaveLength(blogs.length - 1)
+
+//   const contents = newBlogs.map(blog => blog.title)
+
+//   expect(contents).not.toContain(blogToDelete.title)
+// })
+
+// test('modifying a specific blog post', async () => {
+//   const blogs = await helper.blogsInDb()
+//   const blogToModifyId = blogs[0].id
+
+//   const modifiedBlog = {
+//     title: 'Modified',
+//     author: 'Modified Author',
+//     url: 'https://google.com',
+//     likes: 14
+//   }
+
+//   await api
+//     .put(`/api/blogs/${blogToModifyId}`)
+//     .expect(200)
+
+//   const newBlogs = await helper.blogsInDb()
+//   const contents = newBlogs.map()
+
+
+// })
 
 afterAll(() => {
   mongoose.connection.close()
