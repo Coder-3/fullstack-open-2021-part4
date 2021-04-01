@@ -82,26 +82,27 @@ test('deleting a specific blog post', async () => {
   expect(contents).not.toContain(blogToDelete.title)
 })
 
-// test('modifying a specific blog post', async () => {
-//   const blogs = await helper.blogsInDb()
-//   const blogToModifyId = blogs[0].id
+test('modifying a specific blog post', async () => {
+  const blogs = await helper.blogsInDb()
+  const blogToModifyId = blogs[0].id
 
-//   const modifiedBlog = {
-//     title: 'Modified',
-//     author: 'Modified Author',
-//     url: 'https://google.com',
-//     likes: 14
-//   }
+  const modifiedBlog = {
+    title: 'Modified',
+    author: 'Modified Author',
+    url: 'https://google.com',
+    likes: 14
+  }
 
-//   await api
-//     .put(`/api/blogs/${blogToModifyId}`)
-//     .expect(200)
+  await api
+    .put(`/api/blogs/${blogToModifyId}`)
+    .send(modifiedBlog)
+    .expect(200)
 
-//   const newBlogs = await helper.blogsInDb()
-//   const contents = newBlogs.map()
+  const newBlogs = await helper.blogsInDb()
+  const contents = newBlogs.map(blog => blog.title)
 
-
-// })
+  expect(contents).toContain(modifiedBlog.title)
+})
 
 afterAll(() => {
   mongoose.connection.close()
