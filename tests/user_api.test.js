@@ -17,7 +17,7 @@ describe('when there is initially one user in db', () => {
   })
 
   test('creation succeeds with a fresh username', async () => {
-    const usersAtStart = await helper.undersInDb()
+    const usersAtStart = await helper.usersInDb()
 
     const newUser = {
       username: 'coder-3',
@@ -53,7 +53,7 @@ describe('when there is initially one user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    expect(result.body.errror).toContain('`username` to be unique')
+    expect(result.body.error).toContain('`username` to be unique')
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
